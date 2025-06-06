@@ -13,23 +13,15 @@ public static class Setup
         return services;
     }
 
-    public static IServiceCollection AddConsoleOutputLogger(this IServiceCollection services)
+    public static RecordLogDelegate ConsoleLogger = async model =>
     {
-        services.AddLogging();
-        services.Configure<RecordLogEvent>(rle =>
+        var logger = WebApp.ServiceProvider.GetRequiredService<Logger<ApiLogService>>();
+        var log = new StringBuilder();
+        foreach (var prop in model.GetType().GetProperties())
         {
-            rle.Event += async model =>
-            {
-                var logger = WebApp.ServiceProvider.GetRequiredService<Logger<ApiLogService>>();
-                var log = new StringBuilder();
-                foreach (var prop in model.GetType().GetProperties())
-                {
-                    log.Append($"{prop.Name, -5}:\t{prop.GetValue(model)}\n");
-                }
-                logger.LogError("{StringBuilder}", log);
-                await Task.CompletedTask;
-            };
-        });
-        return services;
-    }
+            log.Append($"{prop.Name, -5}:\t{prop.GetValue(model)}\n");
+        }
+        logger.LogError("{StringBuilder}", log.ToString());
+        await Task.CompletedTask;
+    };
 }

@@ -50,17 +50,11 @@ public class ApiLogService : IApiLogService
         _apiLogModel.Parameter = JsonConvert.SerializeObject(_request);
         _apiLogModel.ResponseHeaders = JsonConvert.SerializeObject(_httpContext.Response.Headers);
 
-        if (_responseContent != null)
-        {
-            _httpContext.Response.StatusCode = (int)_httpStatusCode;
-            await _httpContext.Response.WriteAsJsonAsync(_responseContent);
-        }
-
         try
         {
             _apiLogModel.ApiLogId = YitIdHelper.NextId();
-            await _recordLogEvent.OnRecordLogEventAsync(_apiLogModel);
             WebApp.AddValue(nameof(ApiLogModel.ApiLogId), _apiLogModel.ApiLogId.ToString());
+            await _recordLogEvent.OnRecordLogEventAsync(_apiLogModel);
         }
         catch (Exception ex)
         {
@@ -69,6 +63,14 @@ public class ApiLogService : IApiLogService
                 DateTimeExtension.Now().ToString("yyyy-MM-dd HH:mm:ss"),
                 JsonConvert.SerializeObject(ex)
             );
+        }
+        finally
+        {
+            if (_responseContent != null)
+            {
+                _httpContext.Response.StatusCode = (int)_httpStatusCode;
+                await _httpContext.Response.WriteAsJsonAsync(_responseContent);
+            }
         }
     }
 
