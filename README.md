@@ -5,15 +5,12 @@ builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<RecordRequestFilter>();
 });
-builder.Services.AddApiLog().AddConsoleOutputLogger();
-builder.Services.Configure<RecordLogEvent>(opt =>
-{
-    opt.Event += async model =>
+builder
+    .Services.AddApiLog()
+    .Configure<RecordLogEvent>(opt =>
     {
-        Console.WriteLine(model);
-        await Task.CompletedTask;
-    };
-});
+        opt.Event += Setup.AnsiConsoleLogger;
+    });
 var app = builder.Build();
 HostApp.RootServiceProvider = app.Services;
 app.Use(
@@ -26,7 +23,7 @@ app.Use(
         }
         catch (CustomException ce)
         {
-            var res = ce.GetWebApiCallBack();
+            var res = ce.GetWebApiResponse();
             apiLogService.SetExceptionResponseResult(ce, res, false, res.Code);
         }
         catch (Exception ex)
