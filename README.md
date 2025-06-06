@@ -34,6 +34,10 @@ app.Use(
             var res = WebApiResponse.Error("系统内部异常");
             apiLogService.SetExceptionResponseResult(ex, res, true, res.Code);
         }
+        finally
+        {
+            await apiLogService.SaveApiLogAsync();
+        }
     }
 );
 ```
