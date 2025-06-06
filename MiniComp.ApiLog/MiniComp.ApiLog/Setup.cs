@@ -15,7 +15,7 @@ public static class Setup
 
     public static RecordLogDelegate ConsoleLogger = async model =>
     {
-        var logger = WebApp.ServiceProvider.GetRequiredService<Logger<ApiLogService>>();
+        var logger = WebApp.ServiceProvider.GetRequiredService<ILogger<ApiLogService>>();
         var log = new StringBuilder();
         foreach (var prop in model.GetType().GetProperties())
         {
