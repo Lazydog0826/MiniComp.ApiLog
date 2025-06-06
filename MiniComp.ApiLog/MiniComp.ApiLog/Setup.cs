@@ -1,7 +1,7 @@
-﻿using System.Text;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using MiniComp.Core.App;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Spectre.Console;
+using Spectre.Console.Json;
 
 namespace MiniComp.ApiLog;
 
@@ -13,15 +13,12 @@ public static class Setup
         return services;
     }
 
-    public static RecordLogDelegate ConsoleLogger = async model =>
+    public static RecordLogDelegate AnsiConsoleLogger = async model =>
     {
-        var logger = WebApp.ServiceProvider.GetRequiredService<ILogger<ApiLogService>>();
-        var log = new StringBuilder();
-        foreach (var prop in model.GetType().GetProperties())
-        {
-            log.Append($"{prop.Name, -5}:\t{prop.GetValue(model)}\n");
-        }
-        logger.LogError("{StringBuilder}", log.ToString());
+        var json = new JsonText(JsonConvert.SerializeObject(model));
+        AnsiConsole.Write(
+            new Panel(json).Header("异常日志").Collapse().RoundedBorder().BorderColor(Color.Red)
+        );
         await Task.CompletedTask;
     };
 }
