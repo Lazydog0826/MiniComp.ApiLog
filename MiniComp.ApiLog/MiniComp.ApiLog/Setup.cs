@@ -21,7 +21,11 @@ public static class Setup
     {
         var json = new JsonText(JsonConvert.SerializeObject(model));
         AnsiConsole.Write(
-            new Panel(json).Header("异常日志").Collapse().RoundedBorder().BorderColor(Color.Red)
+            new Panel(json)
+                .Header($"异常日志 - {DateTimeExtension.Now():yyyy-MM-dd HH:mm:ss}")
+                .Collapse()
+                .RoundedBorder()
+                .BorderColor(Color.Red)
         );
         await Task.CompletedTask;
     };
@@ -33,15 +37,14 @@ public static class Setup
         {
             var rootPath = Path.Join(HostApp.AppRootPath, "logs");
             var fileName = DateTimeExtension.Now().ToString("yyyy-MM-dd") + ".log";
-            if (Directory.Exists(rootPath))
+            if (!Directory.Exists(rootPath))
             {
                 Directory.CreateDirectory(rootPath);
             }
             var filePath = Path.Join(rootPath, fileName);
-            File.AppendAllTextAsync(
+            File.AppendAllText(
                 filePath,
-                $"{DateTimeExtension.Now():yyyy-MM-dd HH:mm:ss}===================="
-                    + Environment.NewLine
+                $"[ {DateTimeExtension.Now():yyyy-MM-dd HH:mm:ss} ] - "
                     + JsonConvert.SerializeObject(model)
                     + Environment.NewLine
             );

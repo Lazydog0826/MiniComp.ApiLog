@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using MiniComp.Core.App;
 using MiniComp.Core.Extension;
 using Newtonsoft.Json;
+using Spectre.Console;
+using Spectre.Console.Json;
 using Yitter.IdGenerator;
 
 namespace MiniComp.ApiLog;
@@ -58,10 +60,13 @@ public class ApiLogService : IApiLogService
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                "\n日志记录异常{}:\n{}",
-                DateTimeExtension.Now().ToString("yyyy-MM-dd HH:mm:ss"),
-                JsonConvert.SerializeObject(ex)
+            var json = new JsonText(JsonConvert.SerializeObject(ex));
+            AnsiConsole.Write(
+                new Panel(json)
+                    .Header($"异常日志 - {DateTimeExtension.Now():yyyy-MM-dd HH:mm:ss}")
+                    .Collapse()
+                    .RoundedBorder()
+                    .BorderColor(Color.Red)
             );
         }
         finally
