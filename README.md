@@ -14,4 +14,26 @@ builder.Services.Configure<RecordLogEvent>(opt =>
         await Task.CompletedTask;
     };
 });
+var app = builder.Build();
+HostApp.RootServiceProvider = app.Services;
+app.Use(
+    async (context, next) =>
+    {
+        var apiLogService = context.RequestServices.GetRequiredService<IApiLogService>();
+        try
+        {
+            await next.Invoke();
+        }
+        catch (CustomException ce)
+        {
+            var res = ce.GetWebApiCallBack();
+            apiLogService.SetExceptionResponseResult(ce, res, false, res.Code);
+        }
+        catch (Exception ex)
+        {
+            var res = WebApiResponse.Error("系统内部异常");
+            apiLogService.SetExceptionResponseResult(ex, res, true, res.Code);
+        }
+    }
+);
 ```
