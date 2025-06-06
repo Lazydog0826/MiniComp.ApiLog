@@ -43,7 +43,6 @@ public static class Setup
                 $"{DateTimeExtension.Now():yyyy-MM-dd HH:mm:ss}===================="
                     + Environment.NewLine
                     + JsonConvert.SerializeObject(model)
-                    + $"======================================="
                     + Environment.NewLine
             );
         }
