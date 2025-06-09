@@ -2,7 +2,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MiniComp.Core.App;
 using MiniComp.Core.Extension;
@@ -17,17 +16,15 @@ public class ApiLogService : IApiLogService
 {
     private readonly ApiLogModel _apiLogModel = new();
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
-    private bool _logIsActive = true;
+    private bool _logIsActive;
     private object? _responseContent;
     private HttpStatusCode _httpStatusCode;
     private readonly HttpContext? _httpContext = WebApp.HttpContext;
     private IDictionary<string, object?> _request = new Dictionary<string, object?>();
-    private readonly ILogger<ApiLogService> _logger;
     private readonly RecordLogEvent _recordLogEvent;
 
-    public ApiLogService(ILogger<ApiLogService> logger, IOptions<RecordLogEvent> options)
+    public ApiLogService(IOptions<RecordLogEvent> options)
     {
-        _logger = logger;
         _recordLogEvent = options.Value;
     }
 
