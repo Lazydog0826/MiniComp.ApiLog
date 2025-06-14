@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>9.1.0</Version>
+    <Version>9.2.0</Version>
     <Authors>Lazydog0826</Authors>
     <PackageProjectUrl>https://github.com/Lazydog0826/MiniComp.ApiLog</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Lazydog0826/MiniComp.ApiLog</RepositoryUrl>
@@ -23,8 +23,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MiniComp.Core" Version="9.0.2" />
-    <PackageReference Include="MiniComp.SnowFlake" Version="9.0.0" />
+    <PackageReference Include="MiniComp.SnowFlake" Version="9.2.0" />
     <PackageReference Include="Spectre.Console.Json" Version="0.50.0" />
   </ItemGroup>
 </Project>
