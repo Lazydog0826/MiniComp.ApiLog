@@ -24,12 +24,12 @@ app.Use(
         catch (CustomException ce)
         {
             var res = ce.GetWebApiResponse();
-            apiLogService.SetExceptionResponseResult(ce, res, false, res.Code);
+            apiLogService.SetExceptionAsync(ce, res, false, res.Code);
         }
         catch (Exception ex)
         {
             var res = WebApiResponse.Error("系统内部异常");
-            apiLogService.SetExceptionResponseResult(ex, res, true, res.Code);
+            apiLogService.SetExceptionAsync(ex, res, true, res.Code);
         }
         finally
         {
