@@ -48,7 +48,6 @@ public class ApiLogService(IOptions<RecordLogEvent> options) : IApiLogService
 
         try
         {
-            _apiLogModel.ApiLogId = YitIdHelper.NextId();
             WebApp.AddValue(nameof(ApiLogModel.ApiLogId), _apiLogModel.ApiLogId.ToString());
             await _recordLogEvent.OnRecordLogEventAsync(_apiLogModel);
         }
@@ -65,7 +64,7 @@ public class ApiLogService(IOptions<RecordLogEvent> options) : IApiLogService
         }
     }
 
-    public void SetExceptionResponseResult(
+    public async Task SetExceptionAsync(
         Exception ex,
         object resObj,
         bool logIsActive,
@@ -76,9 +75,13 @@ public class ApiLogService(IOptions<RecordLogEvent> options) : IApiLogService
         _apiLogModel.Exception = ex;
         _responseContent = resObj;
         _httpStatusCode = httpStatusCode;
+        if (logIsActive)
+        {
+            _apiLogModel.ApiLogId = YitIdHelper.NextId();
+        }
         if (_httpContext != null)
         {
-            _httpContext.Response.WriteAsJsonAsync(resObj);
+            await _httpContext.Response.WriteAsJsonAsync(resObj);
             _httpContext.Response.StatusCode = (int)_httpStatusCode;
         }
     }

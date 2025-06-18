@@ -23,7 +23,7 @@ public interface IApiLogService
     /// <param name="resObj"></param>
     /// <param name="logIsActive"></param>
     /// <param name="httpStatusCode"></param>
-    public void SetExceptionResponseResult(
+    public Task SetExceptionAsync(
         Exception ex,
         object resObj,
         bool logIsActive,
