@@ -81,8 +81,8 @@ public class ApiLogService(IOptions<RecordLogEvent> options) : IApiLogService
         }
         if (_httpContext != null)
         {
-            await _httpContext.Response.WriteAsJsonAsync(resObj);
             _httpContext.Response.StatusCode = (int)_httpStatusCode;
+            await _httpContext.Response.WriteAsJsonAsync(resObj);
         }
     }
 
